@@ -20,7 +20,8 @@ class Voltage:
 
 tool = Voltage()
 
-with open("sample.txt", "r") as file:
+with open("input.txt", "r") as file:
     for line in file:
         tool.joltage += int(tool.identify(line.strip(), 0, tool.battery_length))
+
     print(f"{tool.joltage}\n")
