@@ -30,11 +30,34 @@ class Menu:
                     for char in line:
                         subsequence += char
                     self.data.append(int(subsequence))
+        self.catalogues.sort(key=lambda x: x[0])
+        print(f"\nordered set of catalogues:\n  {self.catalogues}")
+        removals = []
+        for i in range(0, len(self.catalogues)):
+            if i in removals:
+                continue
+            print(f"\ntesting for encompassment of catalogue {i}:\n  {self.catalogues[i]}")
+            for j in range(0, len(self.catalogues)):
+                if j in removals:
+                    continue
+                if self.catalogues[i][0] > self.catalogues[j][0] and self.catalogues[i][1] < self.catalogues[j][1]:
+                    print(f"\t  catalogue {self.catalogues[i]} entirely contained within catalogue {self.catalogues[j]}, marking for removal...")
+                    removals.append(i)
+                    continue
+                elif self.catalogues[j][0] > self.catalogues[i][0] and self.catalogues[j][1] < self.catalogues[i][1]:
+                    print(f"\t  catalogue {self.catalogues[j]} entirely contained within catalogue {self.catalogues[i]}, marking for removal...")
+                    removals.append(j)
+                    continue
+        print(f"\ndeleting encompassed catalogues at indexes:\n  {removals}")
+        for i in removals:
+            del self.catalogues[i]
         self.extract()
         print(f"\ntotal fresh ingredients: {self.sum}\n")
 
     def extract(self):
+        print("\nI'm extracting!")
         if self.mode == 1:
+            print(f"  test mode: {self.mode}")
             self.overlap()
             print(f"\nfinalized set of catalogues:\n  {self.catalogues}\n")
             for i in range(0, len(self.catalogues)):
@@ -42,21 +65,26 @@ class Menu:
                 print(f"  ...identified {self.catalogues[i][1] - self.catalogues[i][0] + 1} unique values\n")
                 self.sum += self.catalogues[i][1] - self.catalogues[i][0] + 1
             return None
+        print(f"  test mode: {self.mode}")
         for i in range(0, len(self.data)):
             flag = 0
-            if flag == 1:
-                continue
+            print(f"\n\ttesting index {i}\n\t  value {self.data[i]}")
             for j in range(0, len(self.catalogues)):
+                print(f"\t\t...against range {self.catalogues[j][0]}, {self.catalogues[j][1]}...")
                 if self.data[i] in range(self.catalogues[j][0], self.catalogues[j][1] + 1):
+                    print("success!")
                     self.sum += 1
                     flag = 1
                     break
+            if flag == 1:
+                print(f"value {self.data[i]} properly accounted for\n  range: ({self.catalogues[j][0]}, {self.catalogues[j][1]})")
+                continue
 
     def overlap(self):
         for i in range(0, len(self.catalogues)):
             print(f"\ntesting overlap for catalogue {i}:\n  {self.catalogues[i]}")
             for j in range(0, len(self.catalogues)):
-                if i == j:      # don't test a catalogue against itself!
+                if j <= i:      # don't re-test catalogues
                     continue
                 print(f"\ttesting catalogue {i} against catalogue {j}:\n\t  {self.catalogues[j]}")
                 start = self.catalogues[i][0]
