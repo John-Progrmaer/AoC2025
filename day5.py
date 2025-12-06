@@ -87,21 +87,14 @@ class Menu:
                 if j <= i:      # don't re-test catalogues
                     continue
                 print(f"\ttesting catalogue {i} against catalogue {j}:\n\t  {self.catalogues[j]}")
-                start = self.catalogues[i][0]
                 end = self.catalogues[i][1]
                 bound1 = self.catalogues[j][0]
-                bound2 = self.catalogues[j][1] + 1
-                if start in range(bound1, bound2):
-                    print(f"\t...start of catalogue {i} ({start}) overlaps catalogue {j}\n\t  {self.catalogues[j]}")
-                    print("\t  ...adjusting up...")
-                    self.catalogues[i][0] += bound2 - start
-                    print(f"\tstart of catalogue {i} has been adjusted from {start} to {self.catalogues[i][0]}")
-                    print(f"\t  proof: {self.catalogues[i]}")
+                bound2 = (self.catalogues[j][1] + 1)
                 if end in range(bound1, bound2):
                     print(f"\t...end of catalogue {i} ({end}) overlaps catalogue {j}\n\t  {self.catalogues[j]}")
                     print("\t ...adjusting down...")
-                    self.catalogues[i][1] -= end - bound1 + 1
+                    self.catalogues[i][1] -= (end - (bound1 - 1))
                     print(f"\tend of catalogue {i} has been adjusted from {end} to {self.catalogues[i][1]}")
                     print(f"\t  proof: {self.catalogues[i]}")
 
-answer = Menu("sample.txt", 1)
+answer = Menu("input.txt", 1)
