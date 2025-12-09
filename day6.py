@@ -1,7 +1,7 @@
 from copy import deepcopy
 
 class Cephalopoder:
-    def __init__(self, source, mode):
+    def __init__(self, source, mode=1):
         self.source = source
         self.mode = mode    # 1 for part 1, 2 for part 2
         self.data = []
@@ -13,8 +13,28 @@ class Cephalopoder:
 
     def pull_data(self):
         with open(self.source, "r") as file:
+            if self.mode == 1:
+                for line in file:
+                    print(line)
+                    print(line.strip().split())
+                    self.data.append(line.strip().split())
+                return None
+            i = 0
             for line in file:
-                self.data.append(line.strip().split())
+                print(f"\nline {i}: {line.strip()}")
+                j = 0
+                for char in line:
+                    if char == "\n":
+                        continue
+                    print(f"  char {j}: ({char})")
+                    j += 1
+                items = line.strip().split()
+                try:
+                    ignore = int(items[0])
+                except ValueError:
+                    print(f"items:\n  {items}\n  length: {len(items)}\n")
+                print(f"number of characters ({j}) compared to number of entries ({len(items)})")
+                i += 1
 
     def reorganize(self):
         if self.mode == 1:
@@ -34,6 +54,7 @@ class Cephalopoder:
             temp = deepcopy(self.active)
             temp.sort(key=len, reverse=True)
             print(f"  ...sorted by length: {temp}\n  (active line remains: {self.active})")
+            self.nonsense(temp)
             self.math_time()
             self.active.clear()
 
@@ -52,5 +73,14 @@ class Cephalopoder:
                 case "*":
                     temp *= self.active[i]
 
+    def nonsense(self, list):
+        temp = ""
+        for i in range(0, len(list)):
+            if i == 0:
+                sample = list[i]
+            print(f"testing list {list} at instance {i}; {list[i]}")
 
-answer = Cephalopoder("sample.txt", 1)
+            test = len(list[i])
+            print(test)
+
+answer = Cephalopoder("sample.txt", 2)
